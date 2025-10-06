@@ -568,28 +568,29 @@ function App() {
 
       {/* Footer */}
       <footer className="relative glass-effect border-t border-white/30 shadow-lg mt-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-4 lg:gap-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-5 sm:py-6">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-4 sm:gap-5 lg:gap-6">
             {/* Left side - Branding */}
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg shadow-md">
-                <Brain className="w-5 h-5 text-white" />
+            <div className="flex items-center gap-2.5 sm:gap-3">
+              <div className="p-1.5 sm:p-2 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg shadow-md">
+                <Brain className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
               </div>
               <div>
-                <p className="text-sm font-semibold gradient-text">PaperSnap</p>
-                <p className="text-xs text-gray-600">AI-Powered Research Assistant</p>
+                <p className="text-xs sm:text-sm font-semibold gradient-text">PaperSnap</p>
+                <p className="text-[10px] sm:text-xs text-gray-600">AI-Powered Research Assistant</p>
               </div>
             </div>
 
             {/* Center - Copyright & Made with Love */}
-            <div className="flex items-center gap-2 text-base text-gray-600">
+            <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 text-xs sm:text-sm lg:text-base text-gray-600 text-center">
               <span>© {new Date().getFullYear()}</span>
-              <span className="text-purple-300">•</span>
-              <span className="flex items-center gap-1.5">
-                Made with <span className="animate-heartbeat">❤️</span> by <span className="font-semibold text-gray-700">Lakshya Singh</span>
+              <span className="text-purple-300 hidden sm:inline">•</span>
+              <span className="flex items-center gap-1 sm:gap-1.5 flex-wrap justify-center">
+                <span className="whitespace-nowrap">Made with <span className="animate-heartbeat">❤️</span> by</span>
+                <span className="font-semibold text-gray-700">Lakshya Singh</span>
               </span>
-              <span className="text-purple-300">•</span>
-              <span className="text-gray-500">All Rights Reserved</span>
+              <span className="text-purple-300 hidden sm:inline">•</span>
+              <span className="text-gray-500 w-full sm:w-auto mt-1 sm:mt-0">All Rights Reserved</span>
             </div>
 
             {/* Right side - Portfolio Link */}
@@ -598,17 +599,17 @@ function App() {
                 href="https://lakshyasingh.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/60 hover:bg-white border border-purple-200 hover:border-purple-400 transition-all duration-300 shadow-sm hover:shadow-md group"
+                className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:py-2 rounded-lg bg-white/60 hover:bg-white border border-purple-200 hover:border-purple-400 transition-all duration-300 shadow-sm hover:shadow-md group"
               >
                 <svg 
-                  className="w-4 h-4 text-gray-600 group-hover:text-purple-600 transition-colors" 
+                  className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-600 group-hover:text-purple-600 transition-colors" 
                   fill="none" 
                   stroke="currentColor" 
                   viewBox="0 0 24 24"
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
                 </svg>
-                <span className="text-sm font-medium text-gray-700 group-hover:text-purple-600">
+                <span className="text-xs sm:text-sm font-medium text-gray-700 group-hover:text-purple-600">
                   Portfolio
                 </span>
               </a>
