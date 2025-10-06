@@ -56,6 +56,11 @@ app.post("/upload", upload.single("file"), async (req, res) => {
     // Create prompt for OpenAI
     const prompt = `You are a research paper summarization assistant. Analyze the following research paper and provide:
 
+IMPORTANT: Start your response with the paper title on the first line in this exact format:
+TITLE: [Exact title of the paper]
+
+Then provide:
+
 1. A comprehensive full summary (2-3 paragraphs)
 2. Five key bullet points highlighting the main contributions
 3. Section-wise summaries:

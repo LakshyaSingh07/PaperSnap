@@ -3,7 +3,7 @@ import axios from 'axios'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Upload, Send, FileText, Loader2 } from 'lucide-react'
+import { Upload, Send, FileText, Loader2, Sparkles, CheckCircle2, Brain } from 'lucide-react'
 
 const API_URL = 'https://papersnap.onrender.com'
 
@@ -99,90 +99,267 @@ function App() {
     return sections
   }
 
+  // Function to extract title from summary
+  const extractTitle = (summaryText) => {
+    const lines = summaryText.split('\n').filter(line => line.trim() !== '')
+    
+    // First try to find explicit TITLE: format
+    const titleLine = lines.find(line => line.startsWith('TITLE:'))
+    if (titleLine) {
+      return titleLine.replace('TITLE:', '').trim()
+    }
+    
+    // Fallback: Use the first substantial line that's not a header marker
+    // and is longer than 20 characters
+    const firstLine = lines.find(line => {
+      const trimmed = line.trim()
+      return trimmed.length > 20 && 
+             !trimmed.startsWith('#') && 
+             !trimmed.startsWith('Comprehensive') &&
+             !trimmed.startsWith('Section-wise')
+    })
+    
+    if (firstLine && firstLine.length < 200) {
+      return firstLine.trim()
+    }
+    
+    return null
+  }
+
+  // Function to remove title from summary text
+  const removeTitleFromSummary = (summaryText) => {
+    const extractedTitle = extractTitle(summaryText)
+    if (!extractedTitle) return summaryText
+    
+    const lines = summaryText.split('\n')
+    
+    // Remove TITLE: line if exists
+    let filteredLines = lines.filter(line => !line.startsWith('TITLE:'))
+    
+    // Also remove the extracted title line if it was used
+    filteredLines = filteredLines.filter(line => line.trim() !== extractedTitle)
+    
+    return filteredLines.join('\n')
+  }
+
+  // Function to render markdown-like text with proper formatting
+  const renderFormattedText = (text) => {
+    const lines = text.split('\n')
+    
+    return lines.map((line, index) => {
+      // Handle headers (# Header) - check from most specific to least
+      if (line.startsWith('#### ')) {
+        return (
+          <h4 key={index} className="text-base font-bold text-gray-900 mt-3 mb-2">
+            {line.replace('#### ', '')}
+          </h4>
+        )
+      } else if (line.startsWith('### ')) {
+        return (
+          <h3 key={index} className="text-lg font-bold text-gray-900 mt-4 mb-2">
+            {line.replace('### ', '')}
+          </h3>
+        )
+      } else if (line.startsWith('## ')) {
+        return (
+          <h2 key={index} className="text-xl font-bold text-gray-900 mt-5 mb-3">
+            {line.replace('## ', '')}
+          </h2>
+        )
+      } else if (line.startsWith('# ')) {
+        return (
+          <h1 key={index} className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600 mt-6 mb-3">
+            {line.replace('# ', '')}
+          </h1>
+        )
+      }
+      
+      // Handle bullet points
+      else if (line.startsWith('- ')) {
+        const content = line.replace('- ', '')
+        return (
+          <li key={index} className="ml-4 mb-2 text-gray-700 leading-relaxed list-disc list-inside">
+            {formatInlineMarkdown(content)}
+          </li>
+        )
+      }
+      
+      // Handle numbered lists
+      else if (/^\d+\.\s/.test(line)) {
+        const content = line.replace(/^\d+\.\s/, '')
+        return (
+          <li key={index} className="ml-4 mb-2 text-gray-700 leading-relaxed list-decimal list-inside">
+            {formatInlineMarkdown(content)}
+          </li>
+        )
+      }
+      
+      // Empty lines
+      else if (line.trim() === '') {
+        return <div key={index} className="h-2"></div>
+      }
+      
+      // Regular paragraphs
+      else {
+        return (
+          <p key={index} className="text-gray-700 leading-relaxed mb-2">
+            {formatInlineMarkdown(line)}
+          </p>
+        )
+      }
+    })
+  }
+
+  // Function to format inline markdown (bold text only)
+  const formatInlineMarkdown = (text) => {
+    const parts = []
+    let currentIndex = 0
+    
+    // Match **bold** text
+    const boldRegex = /\*\*(.+?)\*\*/g
+    let match
+    
+    while ((match = boldRegex.exec(text)) !== null) {
+      // Add text before the match
+      if (match.index > currentIndex) {
+        parts.push(text.slice(currentIndex, match.index))
+      }
+      // Add bold text
+      parts.push(
+        <strong key={match.index} className="font-semibold text-gray-900">
+          {match[1]}
+        </strong>
+      )
+      currentIndex = match.index + match[0].length
+    }
+    
+    // Add remaining text
+    if (currentIndex < text.length) {
+      parts.push(text.slice(currentIndex))
+    }
+    
+    return parts.length > 0 ? parts : text
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 relative overflow-hidden">
+      {/* Animated Background Blobs */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse"></div>
+        <div className="absolute top-40 right-10 w-96 h-96 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse delay-1000"></div>
+        <div className="absolute -bottom-32 left-1/2 w-96 h-96 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse delay-2000"></div>
+      </div>
+
       {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center gap-3">
-            <FileText className="w-8 h-8 text-primary" />
-            <h1 className="text-2xl font-bold text-gray-900">Research Paper Summarizer</h1>
+      <header className="relative glass-effect border-b border-white/30 shadow-lg">
+        <div className="max-w-7xl mx-auto px-6 py-5">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl shadow-lg">
+                <Brain className="w-7 h-7 text-white" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold gradient-text">Research Paper Summarizer</h1>
+                <p className="text-xs text-gray-600 flex items-center gap-1">
+                  <Sparkles className="w-3 h-3" />
+                  AI-Powered Analysis
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-6 py-8">
+      <main className="relative max-w-7xl mx-auto px-6 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 min-h-[calc(100vh-180px)]">
           {/* Left Column - Upload Section (30%) */}
-          <div className="lg:col-span-1">
-            <Card className="h-full">
-              <CardHeader>
-                <CardTitle>Welcome!</CardTitle>
-                <CardDescription>
-                  Upload your research paper PDF to get started with AI-powered analysis.
+          <div className="lg:col-span-1 animate-slide-up">
+            <Card className="h-full glass-effect border-white/40 shadow-2xl hover:shadow-3xl transition-all duration-300">
+              <CardHeader className="pb-4">
+                <CardTitle className="flex items-center gap-2 text-xl">
+                  <Sparkles className="w-5 h-5 text-purple-500" />
+                  Welcome!
+                </CardTitle>
+                <CardDescription className="text-gray-600">
+                  Upload your research paper PDF to unlock AI-powered insights and analysis.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="space-y-4">
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-primary transition-colors">
-                    <Upload className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-                    <input
-                      type="file"
-                      ref={fileInputRef}
-                      onChange={handleFileSelect}
-                      accept="application/pdf"
-                      className="hidden"
-                    />
-                    <Button
-                      onClick={() => fileInputRef.current?.click()}
-                      variant="outline"
-                      className="mb-2"
-                    >
-                      Select PDF File
-                    </Button>
-                    {file && (
-                      <p className="text-sm text-gray-600 mt-2">
-                        Selected: <span className="font-medium">{file.name}</span>
-                      </p>
-                    )}
+                  <div className="group border-2 border-dashed border-purple-300 rounded-xl p-8 text-center hover:border-purple-500 hover:bg-purple-50/50 transition-all duration-300 cursor-pointer relative overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div className="relative z-10">
+                      <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                        <Upload className="w-8 h-8 text-white" />
+                      </div>
+                      <input
+                        type="file"
+                        ref={fileInputRef}
+                        onChange={handleFileSelect}
+                        accept="application/pdf"
+                        className="hidden"
+                      />
+                      <Button
+                        onClick={() => fileInputRef.current?.click()}
+                        variant="outline"
+                        className="mb-2 border-purple-300 hover:bg-purple-50 hover:border-purple-500"
+                      >
+                        <FileText className="w-4 h-4 mr-2" />
+                        Select PDF File
+                      </Button>
+                      {file && (
+                        <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg animate-fade-in">
+                          <p className="text-sm text-green-700 flex items-center justify-center gap-2">
+                            <CheckCircle2 className="w-4 h-4" />
+                            <span className="font-medium truncate max-w-[200px]">{file.name}</span>
+                          </p>
+                        </div>
+                      )}
+                    </div>
                   </div>
 
                   <Button
                     onClick={handleUpload}
                     disabled={!file || uploading}
-                    className="w-full"
+                    className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-lg hover:shadow-xl transition-all duration-300 text-white font-semibold"
                     size="lg"
                   >
                     {uploading ? (
                       <>
-                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        Processing...
+                        <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                        Processing Magic...
                       </>
                     ) : (
-                      'Get Started / Upload Paper'
+                      <>
+                        <Sparkles className="w-5 h-5 mr-2" />
+                        Analyze Paper
+                      </>
                     )}
                   </Button>
                 </div>
 
-                <div className="pt-6 border-t space-y-3">
-                  <h3 className="font-semibold text-sm text-gray-700">What you'll get:</h3>
-                  <ul className="space-y-2 text-sm text-gray-600">
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary mt-0.5">✓</span>
-                      <span>Full comprehensive summary</span>
+                <div className="pt-6 border-t border-purple-100 space-y-3">
+                  <h3 className="font-semibold text-sm text-gray-800 flex items-center gap-2">
+                    <Brain className="w-4 h-4 text-purple-500" />
+                    What you'll discover:
+                  </h3>
+                  <ul className="space-y-3 text-sm text-gray-700">
+                    <li className="flex items-start gap-3 p-2 rounded-lg hover:bg-purple-50/50 transition-colors">
+                      <CheckCircle2 className="w-5 h-5 text-purple-500 flex-shrink-0 mt-0.5" />
+                      <span>Comprehensive AI summary</span>
                     </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary mt-0.5">✓</span>
-                      <span>5 key bullet points</span>
+                    <li className="flex items-start gap-3 p-2 rounded-lg hover:bg-purple-50/50 transition-colors">
+                      <CheckCircle2 className="w-5 h-5 text-purple-500 flex-shrink-0 mt-0.5" />
+                      <span>5 key insights & contributions</span>
                     </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary mt-0.5">✓</span>
-                      <span>Section-wise analysis</span>
+                    <li className="flex items-start gap-3 p-2 rounded-lg hover:bg-purple-50/50 transition-colors">
+                      <CheckCircle2 className="w-5 h-5 text-purple-500 flex-shrink-0 mt-0.5" />
+                      <span>Section-wise deep analysis</span>
                     </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary mt-0.5">✓</span>
-                      <span>Interactive Q&A about the paper</span>
+                    <li className="flex items-start gap-3 p-2 rounded-lg hover:bg-purple-50/50 transition-colors">
+                      <CheckCircle2 className="w-5 h-5 text-purple-500 flex-shrink-0 mt-0.5" />
+                      <span>Interactive Q&A assistant</span>
                     </li>
                   </ul>
                 </div>
@@ -191,59 +368,112 @@ function App() {
           </div>
 
           {/* Right Column - Summary & Q&A Section (70%) */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2 animate-slide-up" style={{animationDelay: '0.1s'}}>
             {!summary ? (
-              <Card className="h-full flex items-center justify-center">
-                <CardContent className="text-center py-20">
-                  <FileText className="w-20 h-20 mx-auto mb-6 text-gray-300" />
-                  <h3 className="text-xl font-semibold text-gray-700 mb-2">
-                    No Paper Uploaded Yet
+              <Card className="h-full flex items-center justify-center glass-effect border-white/40 shadow-2xl relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-100/20 via-pink-100/20 to-blue-100/20"></div>
+                <CardContent className="text-center py-20 relative z-10">
+                  <div className="relative inline-block mb-6">
+                    <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full blur-xl opacity-20 animate-pulse"></div>
+                    <FileText className="w-24 h-24 mx-auto text-purple-300 relative z-10" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-800 mb-3 flex items-center justify-center gap-2">
+                    <Sparkles className="w-6 h-6 text-purple-500" />
+                    Ready to Analyze
                   </h3>
-                  <p className="text-gray-500">
-                    Upload a research paper to see the AI-generated summary and analysis
+                  <p className="text-gray-600 max-w-md mx-auto">
+                    Upload a research paper to unlock AI-powered summaries, insights, and interactive Q&A
                   </p>
+                  <div className="mt-8 flex items-center justify-center gap-6 text-sm text-gray-500">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                      <span>AI Ready</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
+                      <span>Fast Processing</span>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             ) : (
               <div className="space-y-6">
                 {/* Summary Card */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle>AI-Generated Summary</CardTitle>
-                    <CardDescription>Analysis of: {filename}</CardDescription>
+                <Card className="glass-effect border-white/40 shadow-2xl hover:shadow-3xl transition-all duration-300 animate-fade-in">
+                  <CardHeader className="border-b border-purple-100 bg-gradient-to-r from-purple-50/50 to-pink-50/50">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <CardTitle className="flex items-center gap-2 text-xl">
+                          <div className="p-1.5 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg">
+                            <Brain className="w-5 h-5 text-white" />
+                          </div>
+                          AI-Generated Summary
+                        </CardTitle>
+                        <CardDescription className="mt-2 flex items-center gap-2">
+                          <FileText className="w-4 h-4" />
+                          <span className="font-medium">{filename}</span>
+                        </CardDescription>
+                      </div>
+                      <div className="px-3 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full flex items-center gap-1">
+                        <CheckCircle2 className="w-3 h-3" />
+                        Analyzed
+                      </div>
+                    </div>
                   </CardHeader>
-                  <CardContent>
-                    <div className="prose prose-sm max-w-none space-y-4">
-                      {parseSummary(summary).map((section, index) => (
-                        <div key={index} className="text-gray-700 whitespace-pre-wrap">
-                          {section}
+                  <CardContent className="pt-6">
+                    <div className="max-w-none space-y-6">
+                      {/* Paper Title */}
+                      {extractTitle(summary) && (
+                        <div className="p-6 bg-gradient-to-br from-purple-100/50 to-pink-100/50 rounded-xl border-2 border-purple-200/50">
+                          <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600 leading-tight">
+                            {extractTitle(summary)}
+                          </h2>
                         </div>
-                      ))}
+                      )}
+                      
+                      {/* Summary Content */}
+                      <div className="p-6 bg-gradient-to-br from-white/60 to-purple-50/30 rounded-xl border border-purple-100/50 hover:border-purple-200 transition-colors">
+                        {renderFormattedText(removeTitleFromSummary(summary))}
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
 
                 {/* Q&A Section */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Ask Questions</CardTitle>
-                    <CardDescription>
-                      Ask any question about the research paper
+                <Card className="glass-effect border-white/40 shadow-2xl hover:shadow-3xl transition-all duration-300 animate-fade-in" style={{animationDelay: '0.2s'}}>
+                  <CardHeader className="border-b border-purple-100 bg-gradient-to-r from-blue-50/50 to-purple-50/50">
+                    <CardTitle className="flex items-center gap-2 text-xl">
+                      <div className="p-1.5 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg">
+                        <Send className="w-5 h-5 text-white" />
+                      </div>
+                      Ask Questions
+                    </CardTitle>
+                    <CardDescription className="flex items-center gap-2">
+                      <Sparkles className="w-3 h-3" />
+                      Get instant answers from AI about the research paper
                     </CardDescription>
                   </CardHeader>
-                  <CardContent className="space-y-4">
+                  <CardContent className="space-y-4 pt-6">
                     {/* Q&A History */}
                     {qaHistory.length > 0 && (
-                      <div className="space-y-4 mb-6 max-h-96 overflow-y-auto">
+                      <div className="space-y-4 mb-6 max-h-96 overflow-y-auto pr-2">
                         {qaHistory.map((qa, index) => (
-                          <div key={index} className="border rounded-lg p-4 bg-gray-50">
-                            <div className="mb-3">
-                              <p className="font-semibold text-gray-900 mb-1">Q: {qa.question}</p>
+                          <div key={index} className="group border border-purple-200 rounded-xl p-5 bg-gradient-to-br from-white/80 to-purple-50/40 hover:shadow-lg transition-all duration-300 animate-fade-in">
+                            <div className="mb-4">
+                              <div className="flex items-start gap-3">
+                                <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center">
+                                  <span className="text-white font-bold text-sm">Q</span>
+                                </div>
+                                <p className="font-semibold text-gray-900 flex-1 pt-1">{qa.question}</p>
+                              </div>
                             </div>
-                            <div className="pl-4 border-l-2 border-primary">
-                              <p className="text-gray-700 whitespace-pre-wrap">
-                                <span className="font-semibold text-primary">A:</span> {qa.answer}
-                              </p>
+                            <div className="flex items-start gap-3 pl-3 border-l-4 border-gradient-to-b from-purple-500 to-pink-500 ml-3">
+                              <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+                                <span className="text-white font-bold text-sm">A</span>
+                              </div>
+                              <div className="text-gray-700 leading-relaxed flex-1 pt-1">
+                                {renderFormattedText(qa.answer)}
+                              </div>
                             </div>
                           </div>
                         ))}
@@ -251,26 +481,27 @@ function App() {
                     )}
 
                     {/* Question Input */}
-                    <div className="flex gap-2">
+                    <div className="flex gap-3 p-4 bg-gradient-to-br from-purple-50/50 to-pink-50/50 rounded-xl border border-purple-200/50">
                       <Input
                         type="text"
-                        placeholder="Type your question here..."
+                        placeholder="Ask anything about the paper..."
                         value={question}
                         onChange={(e) => setQuestion(e.target.value)}
                         onKeyPress={handleKeyPress}
                         disabled={askingQuestion}
-                        className="flex-1"
+                        className="flex-1 border-purple-200 focus:border-purple-400 bg-white/80"
                       />
                       <Button
                         onClick={handleAskQuestion}
                         disabled={!question.trim() || askingQuestion}
                         size="lg"
+                        className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl transition-all duration-300"
                       >
                         {askingQuestion ? (
-                          <Loader2 className="w-4 h-4 animate-spin" />
+                          <Loader2 className="w-5 h-5 animate-spin" />
                         ) : (
                           <>
-                            <Send className="w-4 h-4 mr-2" />
+                            <Send className="w-5 h-5 mr-2" />
                             Ask
                           </>
                         )}
