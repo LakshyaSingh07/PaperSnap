@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Upload, Send, FileText, Loader2 } from 'lucide-react'
 
-const API_URL = 'https://papersnap.onrender.com/'
+const API_URL = 'https://papersnap.onrender.com'
 
 function App() {
   const [file, setFile] = useState(null)
