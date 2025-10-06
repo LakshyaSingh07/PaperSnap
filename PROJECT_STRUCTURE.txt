@@ -1,0 +1,106 @@
+ResearchPaperSummary/
+│
+├── backend/                          # Node.js + Express Backend
+│   ├── server.js                     # Main server file with /upload and /qa routes
+│   ├── package.json                  # Backend dependencies
+│   ├── env.template                  # Template for .env file
+│   ├── .gitignore                    # Git ignore rules
+│   └── README.md                     # Backend documentation
+│
+├── frontend/                         # React Frontend
+│   ├── public/
+│   │   └── vite.svg                  # Favicon
+│   ├── src/
+│   │   ├── components/
+│   │   │   └── ui/                   # shadcn/ui components
+│   │   │       ├── button.jsx        # Button component
+│   │   │       ├── card.jsx          # Card component
+│   │   │       └── input.jsx         # Input component
+│   │   ├── lib/
+│   │   │   └── utils.js              # Utility functions (cn)
+│   │   ├── App.jsx                   # Main application component
+│   │   ├── main.jsx                  # React entry point
+│   │   └── index.css                 # Global styles with Tailwind
+│   ├── index.html                    # HTML template
+│   ├── vite.config.js                # Vite configuration
+│   ├── tailwind.config.js            # Tailwind CSS configuration
+│   ├── postcss.config.js             # PostCSS configuration
+│   ├── package.json                  # Frontend dependencies
+│   ├── .gitignore                    # Git ignore rules
+│   └── README.md                     # Frontend documentation
+│
+├── README.md                         # Main project documentation
+├── QUICKSTART.md                     # Quick start guide
+├── .gitignore                        # Root git ignore
+└── PROJECT_STRUCTURE.txt             # This file
+
+==============================================================================
+TECH STACK SUMMARY
+==============================================================================
+
+Backend:
+  - Node.js + Express (Web server)
+  - pdf-parse (PDF text extraction)
+  - OpenAI API (gpt-4o-mini for summarization & Q&A)
+  - Multer (File upload handling)
+  - CORS (Cross-origin requests)
+
+Frontend:
+  - React 18.2 (UI framework)
+  - Vite (Build tool & dev server)
+  - Tailwind CSS (Styling)
+  - shadcn/ui (UI components)
+  - Axios (HTTP client)
+  - Lucide React (Icons)
+
+==============================================================================
+KEY FILES
+==============================================================================
+
+1. backend/server.js
+   - POST /upload: Accepts PDF, extracts text, calls OpenAI for summary
+   - POST /qa: Accepts question, uses stored paper text to answer
+   - GET /health: Server status check
+
+2. frontend/src/App.jsx
+   - Two-column layout (30% left, 70% right)
+   - File upload functionality
+   - Summary display with structured formatting
+   - Q&A interface with history
+
+3. backend/.env (YOU MUST CREATE THIS)
+   - OPENAI_API_KEY=your_key_here
+   - PORT=3001
+
+==============================================================================
+SETUP STEPS
+==============================================================================
+
+1. Backend:
+   cd backend
+   npm install
+   # Create .env file with OPENAI_API_KEY
+   npm start
+
+2. Frontend:
+   cd frontend
+   npm install
+   npm run dev
+
+3. Open http://localhost:3000 in browser
+
+==============================================================================
+FEATURES
+==============================================================================
+
+✓ PDF upload and processing
+✓ AI-generated full summary
+✓ 5 key bullet points extraction
+✓ Section-wise analysis (Intro, Methods, Results, Conclusion)
+✓ Interactive Q&A with running history
+✓ Modern, responsive UI
+✓ Real-time loading states
+✓ In-memory storage (no database required)
+✓ Single-page application
+✓ Production-ready modular code
+
