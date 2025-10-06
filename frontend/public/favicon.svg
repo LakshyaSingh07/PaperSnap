@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="50" cy="50" r="48" fill="url(#grad)"/>
+  
+  <!-- Paper icon -->
+  <rect x="30" y="25" width="40" height="50" rx="3" fill="white" opacity="0.95"/>
+  
+  <!-- Paper lines -->
+  <line x1="35" y1="35" x2="60" y2="35" stroke="url(#grad)" stroke-width="2" stroke-linecap="round"/>
+  <line x1="35" y1="42" x2="65" y2="42" stroke="url(#grad)" stroke-width="2" stroke-linecap="round"/>
+  <line x1="35" y1="49" x2="65" y2="49" stroke="url(#grad)" stroke-width="2" stroke-linecap="round"/>
+  <line x1="35" y1="56" x2="55" y2="56" stroke="url(#grad)" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- Brain/AI sparkle icon -->
+  <circle cx="65" cy="60" r="12" fill="#f59e0b" opacity="0.9"/>
+  <path d="M 65 54 L 66 58 L 70 59 L 66 60 L 65 64 L 64 60 L 60 59 L 64 58 Z" fill="white"/>
+</svg>

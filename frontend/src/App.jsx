@@ -259,12 +259,33 @@ function App() {
                 <Brain className="w-7 h-7 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold gradient-text">Research Paper Summarizer</h1>
+                <h1 className="text-2xl font-bold gradient-text">PaperSnap | Research Paper Summarizer</h1>
                 <p className="text-xs text-gray-600 flex items-center gap-1">
                   <Sparkles className="w-3 h-3" />
                   AI-Powered Analysis
                 </p>
               </div>
+            </div>
+            
+            <div className="flex items-center gap-4">
+              <a 
+                href="https://lakshyasingh.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/80 hover:bg-white border border-purple-200 hover:border-purple-400 transition-all duration-300 shadow-sm hover:shadow-md group"
+              >
+                <span className="text-sm font-medium text-gray-700 group-hover:text-purple-600">
+                  Created by <span className="font-semibold">Lakshya Singh</span>
+                </span>
+                <svg 
+                  className="w-4 h-4 text-gray-500 group-hover:text-purple-600 transition-colors" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </a>
             </div>
           </div>
         </div>
