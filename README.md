@@ -260,5 +260,5 @@ For issues, questions, or contributions, please open an issue in the repository.
 
 ---
 
-**Built with ❤️ using React, Node.js, and OpenAI**
+**Made with ❤️ by Lakshya Singh**
 
