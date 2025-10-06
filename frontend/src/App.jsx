@@ -252,33 +252,63 @@ function App() {
 
       {/* Header */}
       <header className="relative glass-effect border-b border-white/30 shadow-lg">
-        <div className="max-w-7xl mx-auto px-6 py-5">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl shadow-lg">
-                <Brain className="w-7 h-7 text-white" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-5">
+          <div className="flex items-center justify-between gap-3">
+            {/* Left side - Logo and Title */}
+            <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+              <div className="p-1.5 sm:p-2 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg sm:rounded-xl shadow-lg flex-shrink-0">
+                <Brain className="w-5 h-5 sm:w-7 sm:h-7 text-white" />
               </div>
-              <div>
-                <h1 className="text-2xl font-bold gradient-text">PaperSnap | Research Paper Summarizer</h1>
+              <div className="min-w-0">
+                {/* Desktop title */}
+                <h1 className="hidden sm:block text-xl lg:text-2xl font-bold gradient-text">
+                  PaperSnap | Research Paper Summarizer
+                </h1>
+                {/* Mobile title */}
+                <h1 className="sm:hidden text-lg font-bold gradient-text">
+                  PaperSnap
+                </h1>
                 <p className="text-xs text-gray-600 flex items-center gap-1">
-                  <Sparkles className="w-3 h-3" />
-                  AI-Powered Analysis
+                  <Sparkles className="w-3 h-3 flex-shrink-0" />
+                  <span className="truncate">AI-Powered Analysis</span>
                 </p>
               </div>
             </div>
             
-            <div className="flex items-center gap-4">
+            {/* Right side - Author Link */}
+            <div className="flex items-center flex-shrink-0">
+              {/* Desktop version */}
               <a 
                 href="https://lakshyasingh.com" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/80 hover:bg-white border border-purple-200 hover:border-purple-400 transition-all duration-300 shadow-sm hover:shadow-md group"
+                className="hidden md:flex items-center gap-2 px-4 py-2 rounded-lg bg-white/80 hover:bg-white border border-purple-200 hover:border-purple-400 transition-all duration-300 shadow-sm hover:shadow-md group"
               >
-                <span className="text-sm font-medium text-gray-700 group-hover:text-purple-600">
+                <span className="text-sm font-medium text-gray-700 group-hover:text-purple-600 whitespace-nowrap">
                   Created by <span className="font-semibold">Lakshya Singh</span>
                 </span>
                 <svg 
                   className="w-4 h-4 text-gray-500 group-hover:text-purple-600 transition-colors" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </a>
+              
+              {/* Mobile/Tablet version - Compact with name */}
+              <a 
+                href="https://lakshyasingh.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="md:hidden flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white/80 hover:bg-white border border-purple-200 hover:border-purple-400 transition-all duration-300 shadow-sm hover:shadow-md group"
+              >
+                <span className="text-xs font-semibold text-gray-700 group-hover:text-purple-600 whitespace-nowrap">
+                  Lakshya Singh
+                </span>
+                <svg 
+                  className="w-3.5 h-3.5 text-gray-500 group-hover:text-purple-600 transition-colors flex-shrink-0" 
                   fill="none" 
                   stroke="currentColor" 
                   viewBox="0 0 24 24"
@@ -535,6 +565,57 @@ function App() {
           </div>
         </div>
       </main>
+
+      {/* Footer */}
+      <footer className="relative glass-effect border-t border-white/30 shadow-lg mt-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-4 lg:gap-6">
+            {/* Left side - Branding */}
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg shadow-md">
+                <Brain className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold gradient-text">PaperSnap</p>
+                <p className="text-xs text-gray-600">AI-Powered Research Assistant</p>
+              </div>
+            </div>
+
+            {/* Center - Copyright & Made with Love */}
+            <div className="flex items-center gap-2 text-base text-gray-600">
+              <span>© {new Date().getFullYear()}</span>
+              <span className="text-purple-300">•</span>
+              <span className="flex items-center gap-1.5">
+                Made with <span className="animate-heartbeat">❤️</span> by <span className="font-semibold text-gray-700">Lakshya Singh</span>
+              </span>
+              <span className="text-purple-300">•</span>
+              <span className="text-gray-500">All Rights Reserved</span>
+            </div>
+
+            {/* Right side - Portfolio Link */}
+            <div className="flex items-center">
+              <a
+                href="https://lakshyasingh.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/60 hover:bg-white border border-purple-200 hover:border-purple-400 transition-all duration-300 shadow-sm hover:shadow-md group"
+              >
+                <svg 
+                  className="w-4 h-4 text-gray-600 group-hover:text-purple-600 transition-colors" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                </svg>
+                <span className="text-sm font-medium text-gray-700 group-hover:text-purple-600">
+                  Portfolio
+                </span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }
